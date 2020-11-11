@@ -1,0 +1,69 @@
+version: "3"
+
+services:
+
+  sg-backend:
+    build:
+      context: './sensorgnome-server'
+    image: ubuntu:latest
+    container_name: sgs-backend
+    hostname: sgs-backend
+    restart: on-failure
+    ports:
+      - "59022:59022"
+      - "59023:59023"
+      - "59024:59024"
+      - "59025:59025"
+      - "59026:59026"
+      - "59027:59027"
+    # volumes:
+    #   - ./sensorgnome-server-software:/sensorgnome-server-software
+    command:
+      sh -c "./sensorgnome-server-software/sensorgnomeServer >> sensorgnomeServer.log.txt 2>&1"
+    # command:
+    #   sh -c "pwd && ls -la / && ls -la /sensorgnome-server-software"
+    stdin_open: true
+    tty: true
+    networks:
+      - sg_network
+
+  nginx:
+    image: nginx
+    container_name: sgs-nginx
+    hostname: sgs-nginx
+    ports:
+      - "10080:80"
+      - "10443:443"
+    volumes:
+      - ./docker-volumes/nginx:/nginx
+    networks:
+      - sg_network
+
+  sg-hugo:
+    build:
+      context: './hugo-static'
+    image: ubuntu:latest
+    container_name: sgs-hugo
+    hostname: sgs-hugo
+    restart: on-failure
+    ports:
+      - "11313:1313"
+      - "11443:443"
+    volumes:
+      - ./docker-volumes/hugo:/hugo
+    # command:
+    #   sh -c "hugo server --logFile /hugo/hugolog.txt --liveReloadPort=443 --port=1313 --baseUrl=sensorgnome.org --appendPort=false"
+    command:
+      sh -c "pwd && ls -la /hugo"
+
+    stdin_open: true
+    tty: true
+    networks:
+      - sg_network
+
+networks:
+  sg_network:
+    driver: bridge
+
+
+# "./sensorgnome-server-software/sensorgnomeServer  >> sensorgnomeServer.log.txt 2>&1"
