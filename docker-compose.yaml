@@ -28,14 +28,15 @@ services:
       - sg_network
 
   nginx:
-    image: nginx
+    image: nginx:alpine
     container_name: sgs-nginx
     hostname: sgs-nginx
     ports:
       - "10080:80"
       - "10443:443"
     volumes:
-      - ./docker-volumes/nginx:/nginx
+      - ./docker-volumes/nginx/etc/nginx:/etc/nginx
+      - ./docker-volumes/nginx/etc/ssl:/etc/ssl
     networks:
       - sg_network
 
@@ -55,7 +56,6 @@ services:
     #   sh -c "hugo server --logFile /hugo/hugolog.txt --liveReloadPort=443 --port=1313 --baseUrl=sensorgnome.org --appendPort=false"
     command:
       sh -c "pwd && ls -la /hugo"
-
     stdin_open: true
     tty: true
     networks:
