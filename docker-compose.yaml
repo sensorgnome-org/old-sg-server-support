@@ -16,10 +16,13 @@ services:
       - "59025:59025"
       - "59026:59026"
       - "59027:59027"
-    # volumes:
-    #   - ./sensorgnome-server-software:/sensorgnome-server-software
+    volumes:
+      # - ./sensorgnome-server-software:/sensorgnome-server-software
+      - ./docker-volumes/sensorgnome-server/logs:/sensorgnome-logs
+      # - ./docker-volumes/sensorgnome-server/database:/
+      # - ./docker-volumes/sensorgnome-server/ssh-keys:/
     command:
-      sh -c "./sensorgnome-server-software/sensorgnomeServer >> sensorgnomeServer.log.txt 2>&1"
+      sh -c "./sensorgnome-server-software/sensorgnomeServer >> /sensorgnome-logs/sensorgnomeServer.log.txt 2>&1"
     # command:
     #   sh -c "pwd && ls -la / && ls -la /sensorgnome-server-software"
     stdin_open: true
@@ -37,6 +40,7 @@ services:
     volumes:
       - ./docker-volumes/nginx/etc/nginx:/etc/nginx
       - ./docker-volumes/nginx/etc/ssl:/etc/ssl
+      - ./docker-volumes/nginx/logs:/var/log/nginx
     networks:
       - sg_network
 
@@ -47,15 +51,13 @@ services:
     container_name: sgs-hugo
     hostname: sgs-hugo
     restart: on-failure
-    ports:
-      - "11313:1313"
-      - "11443:443"
+    expose:
+      - "1313"
+      - "443"
     volumes:
-      - ./docker-volumes/hugo:/hugo
-    # command:
-    #   sh -c "hugo server --logFile /hugo/hugolog.txt --liveReloadPort=443 --port=1313 --baseUrl=sensorgnome.org --appendPort=false"
+      - ./docker-volumes/hugo/logs:/hugo-logs
     command:
-      sh -c "pwd && ls -la /hugo"
+      sh -c "cd /hugo/sensorgnome-website && hugo server --logFile /hugo-logs/hugolog.txt --liveReloadPort=443 --port=1313 --baseUrl=sensorgnome.org --appendPort=false"
     stdin_open: true
     tty: true
     networks:
@@ -64,6 +66,3 @@ services:
 networks:
   sg_network:
     driver: bridge
-
-
-# "./sensorgnome-server-software/sensorgnomeServer  >> sensorgnomeServer.log.txt 2>&1"
