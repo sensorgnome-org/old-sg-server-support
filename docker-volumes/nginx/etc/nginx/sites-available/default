@@ -6,12 +6,12 @@ server {
     #  sudo su -c 'hugo server --liveReloadPort=443 --port=1313 --baseUrl=sensorgnome.org --appendPort=false' sg_remote
 
     location / {
-        proxy_pass http://127.0.0.1:1313/;
+        proxy_pass http://sgs-hugo:1313/;
     }
 
     # reverse proxy to hugo server for websockets, used by livereload
     location /livereload {
-	proxy_pass http://127.0.0.1:1313/livereload;
+	proxy_pass http://sgs-hugo:1313/livereload;
 	proxy_read_timeout 86400;
 	proxy_http_version 1.1;
 	proxy_set_header Upgrade $http_upgrade;
