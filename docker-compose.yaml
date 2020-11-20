@@ -17,14 +17,12 @@ services:
       - "59026:59026"
       - "59027:59027"
     volumes:
-      # - ./sensorgnome-server-software:/sensorgnome-server-software
       - ./docker-volumes/sensorgnome-server/logs:/sensorgnome-logs
-      # - ./docker-volumes/sensorgnome-server/database:/
-      # - ./docker-volumes/sensorgnome-server/ssh-keys:/
+      - ./docker-volumes/sensorgnome-server/database/sg_remote.sqlite:/home/sg_remote/sg_remote.sqlite
+      - ./docker-volumes/sensorgnome-server/ssh-keys/.ssh:/home/sg_remote/.ssh
+      - ./docker-volumes/sensorgnome-server/status/index.md:/home/johnb/src/sensorgnome-website/content/status/index.md
     command:
-      sh -c "./sensorgnome-server-software/sensorgnomeServer >> /sensorgnome-logs/sensorgnomeServer.log.txt 2>&1"
-    # command:
-    #   sh -c "pwd && ls -la / && ls -la /sensorgnome-server-software"
+      sh -c "/sensorgnome-server-software/sensorgnomeServer >> /sensorgnome-logs/sensorgnomeServer.log.txt 2>&1"
     stdin_open: true
     tty: true
     networks:
@@ -37,6 +35,8 @@ services:
     ports:
       - "10080:80"
       - "10443:443"
+    expose:
+      - "1313"
     volumes:
       - ./docker-volumes/nginx/etc/nginx:/etc/nginx
       - ./docker-volumes/nginx/etc/ssl:/etc/ssl
@@ -56,8 +56,9 @@ services:
       - "443"
     volumes:
       - ./docker-volumes/hugo/logs:/hugo-logs
+      - ./docker-volumes/sensorgnome-server/status/index.md:/hugo/content/status/index.md
     command:
-      sh -c "cd /hugo/sensorgnome-website && hugo server --logFile /hugo-logs/hugolog.txt --liveReloadPort=443 --port=1313 --baseUrl=sensorgnome.org --appendPort=false"
+      sh -c "cd /hugo/sensorgnome-website && hugo server --logFile /hugo-logs/hugolog.txt --liveReloadPort=443 --port=1313 --bind=0.0.0.0 --baseUrl=sensorgnome.org --appendPort=false"
     stdin_open: true
     tty: true
     networks:
