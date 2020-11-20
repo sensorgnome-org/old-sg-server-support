@@ -11,4 +11,3 @@ WORKDIR /hugo
 RUN git clone https://github.com/sensorgnome-org/sensorgnome-website.git && \
     cd sensorgnome-website && \
     git submodule add https://github.com/zwbetz-gh/vanilla-bootstrap-hugo-theme.git themes/vanilla-bootstrap-hugo-theme
-RUN pwd && ls -la && ls -ls sensorgnome-website

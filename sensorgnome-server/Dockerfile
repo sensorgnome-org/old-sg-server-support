@@ -5,7 +5,11 @@ RUN apt-get update && apt-get install -y golang git
 
 RUN go get github.com/fsnotify/fsnotify github.com/jbrzusto/mbus github.com/mattn/go-sqlite3
 
-RUN rm -rf /docker-temp && mkdir -p /docker-temp && rm -rf /sensorgnome-server-software && mkdir -p /sensorgnome-server-software
+RUN rm -rf /docker-temp && \
+    mkdir -p /docker-temp && \
+    rm -rf /sensorgnome-server-software && \
+    mkdir -p /sensorgnome-server-software && \
+    rm -rf /sensorgnome-logs && mkdir -p /sensorgnome-logs
 WORKDIR /docker-temp
 RUN cd /docker-temp && git clone https://github.com/sensorgnome-org/sensorgnome-server.git
 
