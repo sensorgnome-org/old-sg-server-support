@@ -57,6 +57,7 @@ services:
     volumes:
       - ./docker-volumes/hugo/logs:/hugo-logs
       - ./docker-volumes/sensorgnome-server/status/index.md:/hugo/content/status/index.md
+      - ./docker-volumes/sg-releases:/hugo/sensorgnome-website/static/sg-releases
     command:
       sh -c "cd /hugo/sensorgnome-website && hugo server --logFile /hugo-logs/hugolog.txt --liveReloadPort=443 --port=1313 --bind=0.0.0.0 --baseUrl=sensorgnome.org --appendPort=false"
     stdin_open: true
