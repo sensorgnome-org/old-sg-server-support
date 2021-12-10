@@ -41,6 +41,21 @@ services:
       - ./docker-volumes/nginx/etc/nginx:/etc/nginx
       - ./docker-volumes/nginx/etc/ssl:/etc/ssl
       - ./docker-volumes/nginx/logs:/var/log/nginx
+      - ./docker-volumes/certbot/conf:/etc/letsencrypt
+      - ./docker-volumes/certbot/www:/var/www/certbot
+        
+    networks:
+      - sg_network
+ 
+  certbot:
+    image: jonasal/nginx-certbot
+    container_name: sgs-certbot
+    environment:
+      - CERTBOT_EMAIL=dfloer@birdscanada.org
+    volumes: 
+      - ./docker-volumes/certbot/conf:/etc/letsencrypt 
+      - ./docker-volumes/certbot/www:/var/www/certbot
+      - ./docker-volumes/testdir:/etc/nginx
     networks:
       - sg_network
 

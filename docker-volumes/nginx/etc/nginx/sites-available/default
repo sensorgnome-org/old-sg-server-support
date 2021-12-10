@@ -38,6 +38,17 @@ server {
     }
 
 }
+
+# Needed for certbot docker container.
+server {
+    location /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+    }
+}
+
+
+
+
 server {
     # archived static wiki pages from old server
     server_name archived.sensorgnome.org;
